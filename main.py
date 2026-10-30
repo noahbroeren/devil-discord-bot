@@ -307,7 +307,7 @@ EMOJI_PATTERN = re.compile(
     "\U00002B00-\U00002BFF"  # extra symbolen
     "\U0000FE00-\U0000FE0F"  # variation selectors
     "\U0001F1E6-\U0001F1FF"  # vlaggen
-    "\U00002B50\U00002705\U0000274C\U0000203C\U00002049"
+    "\U00002B50\U00002705\U0000274C\U0000203C\U00002049\U000020E3"
     "]+",
     flags=re.UNICODE,
 )
@@ -429,7 +429,7 @@ def analyse_post(chinese_text: str, image_blobs, known_products):
     Geeft (title, translation) terug. Valt bij problemen terug op de ruwe
     tekst en een generieke titel, zodat de bot nooit een post overslaat.
     """
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not api_key:
         return FALLBACK_TITLE, chinese_text
 
@@ -581,7 +581,7 @@ def post_to_discord(webhook_url: str, title: str, body: str, image_blobs,
 
 def main():
     uid = os.environ["WEIBO_UID"]
-    webhook_url = os.environ["DISCORD_WEBHOOK_URL"]
+    webhook_url = os.environ["DISCORD_WEBHOOK_URL"].strip()
 
     state = load_json(STATE_FILE, {"last_id": None})
     known_products = load_products()
